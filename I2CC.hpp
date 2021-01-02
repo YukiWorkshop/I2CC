@@ -20,6 +20,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <system_error>
 
 #include <unistd.h>
@@ -92,6 +93,22 @@ namespace YukiWorkshop {
 			for (uint8_t i=0; i<len; i++) {
 				write_u8(reg_addr + i, ((uint8_t *) buf)[i]);
 			}
+		}
+
+		std::vector<uint8_t> read_data(uint8_t reg_addr, uint8_t len) {
+			std::vector<uint8_t> ret(len);
+			read_data(reg_addr, ret.data(), len);
+			return ret;
+		}
+
+		template<typename T>
+		void write_data(uint8_t reg_addr, const std::vector<T>& buf) {
+			write_data(reg_addr, buf.data(), buf.size() * sizeof(T));
+		}
+
+		template<typename T>
+		void write_data(uint8_t reg_addr, const T& buf) {
+			write_data(reg_addr, buf.data(), buf.size());
 		}
 
 		uint8_t read_u8(uint8_t reg_addr) {
